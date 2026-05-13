@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { FITMENT_FACTORS, getProjectedPayMatrix } from "@/lib/calculator";
+import { FITMENT_STOPS, getProjectedPayMatrix } from "@/lib/calculator";
 import { formatCurrency } from "@/lib/format";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useCalculatorStore } from "@/hooks/use-calculator-store";
+
+const CHART_STOPS = [1.92, 2.57, 2.86, 3.83];
 
 export default function PayMatrix() {
   const { inputs } = useCalculatorStore();
@@ -12,35 +14,36 @@ export default function PayMatrix() {
 
   const matrixData = getProjectedPayMatrix(selectedFactor);
 
-  // Data for chart showing comparison across all factors for a few key levels
-  const chartData = [1, 6, 10, 14, 18].map(level => {
-    const row = matrixData.find(r => r.level === level) || matrixData[0];
-    const dataPoint: any = { name: `Level ${level}` };
-    FITMENT_FACTORS.forEach(factor => {
-      dataPoint[`Factor ${factor.value}x`] = Math.round(row.entryPay * factor.value / 100) * 100;
+  const chartData = ["1", "6", "10", "13", "14", "18"].map((level) => {
+    const row = matrixData.find((r) => r.level === level);
+    if (!row) return null;
+    const dataPoint: Record<string, string | number> = { name: `L${level}` };
+    CHART_STOPS.forEach((factor) => {
+      dataPoint[`${factor}×`] = Math.round(row.entryPay * factor / 100) * 100;
     });
     return dataPoint;
-  });
+  }).filter(Boolean) as Record<string, string | number>[];
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-serif mb-2">Projected 8th CPC Pay Matrix</h1>
         <p className="text-muted-foreground max-w-3xl">
-          This table shows the entry-level basic pay for all pay levels under the 7th CPC compared to the projected 8th CPC basic pay based on the selected fitment factor.
+          Entry-level basic pay for all 7th CPC levels alongside projected 8th CPC entry pay
+          based on the selected fitment factor.
         </p>
       </div>
 
       <div className="flex items-center gap-4 bg-card p-4 rounded-lg border shadow-sm max-w-sm">
-        <label className="font-semibold whitespace-nowrap">View Scenario:</label>
+        <label className="font-semibold whitespace-nowrap text-sm">View Scenario:</label>
         <Select value={selectedFactor.toString()} onValueChange={(val) => setSelectedFactor(Number(val))}>
           <SelectTrigger>
             <SelectValue placeholder="Select Fitment Factor" />
           </SelectTrigger>
           <SelectContent>
-            {FITMENT_FACTORS.map((factor) => (
-              <SelectItem key={factor.value} value={factor.value.toString()}>
-                {factor.label} ({factor.description})
+            {FITMENT_STOPS.map((stop) => (
+              <SelectItem key={stop.value} value={stop.value.toString()}>
+                {stop.label} — {stop.description}
               </SelectItem>
             ))}
           </SelectContent>
@@ -49,31 +52,32 @@ export default function PayMatrix() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Entry Pay Comparison by Level</CardTitle>
-          <CardDescription>Visualizing how different fitment factors affect key entry levels</CardDescription>
+          <CardTitle>Entry Pay Comparison — Key Levels</CardTitle>
+          <CardDescription>
+            Comparing four fitment factor scenarios across Level 1, 6, 10, 13, 14, and 18
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px] w-full">
+          <div className="h-[360px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
+              <BarChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-                <YAxis 
-                  tickFormatter={(value) => `₹${value / 1000}k`}
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 12 }} />
+                <YAxis
+                  tickFormatter={(v) => v >= 100000 ? `₹${(v / 100000).toFixed(1)}L` : `₹${v / 1000}k`}
                   stroke="hsl(var(--muted-foreground))"
+                  tick={{ fontSize: 11 }}
+                  width={60}
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value: number) => formatCurrency(value)}
                   contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))" }}
                 />
                 <Legend />
-                <Bar dataKey="Factor 1.92x" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Factor 2.57x" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Factor 2.86x" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Factor 3.83x" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="1.92×" fill="#94a3b8" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="2.57×" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="2.86×" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="3.83×" fill="#10b981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -85,28 +89,35 @@ export default function PayMatrix() {
           <table className="w-full text-sm text-left border-collapse">
             <thead className="bg-primary text-primary-foreground">
               <tr>
-                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-center">Level</th>
-                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20">Post Category</th>
-                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-right">Grade Pay (6th)</th>
+                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-center w-16">Level</th>
+                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-right">Grade Pay</th>
                 <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-right">7th CPC Entry</th>
-                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-right bg-primary/80">Projected 8th CPC</th>
+                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-right">7th CPC Max</th>
+                <th className="px-4 py-4 font-semibold border-b border-primary-foreground/20 text-right bg-primary/80">
+                  8th CPC Entry ({selectedFactor}×)
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {matrixData.map((row) => (
                 <tr key={row.level} className="hover:bg-muted/50 transition-colors">
-                  <td className="px-4 py-3 text-center font-medium bg-muted/30">{row.level}</td>
-                  <td className="px-4 py-3">{row.postCategory}</td>
+                  <td className="px-4 py-3 text-center font-bold bg-muted/20">
+                    {row.level}
+                  </td>
                   <td className="px-4 py-3 text-right text-muted-foreground">{row.gradePay}</td>
                   <td className="px-4 py-3 text-right font-medium">{formatCurrency(row.entryPay)}</td>
-                  <td className="px-4 py-3 text-right font-bold text-primary bg-primary/5">{formatCurrency(row.projectedPay)}</td>
+                  <td className="px-4 py-3 text-right text-muted-foreground">
+                    {formatCurrency(row.cells[row.cells.length - 1])}
+                  </td>
+                  <td className="px-4 py-3 text-right font-bold text-primary bg-primary/5">
+                    {formatCurrency(row.projectedPay)}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </Card>
-
     </div>
   );
 }

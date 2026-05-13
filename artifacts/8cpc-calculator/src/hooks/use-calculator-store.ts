@@ -1,26 +1,27 @@
 import { useState, useEffect } from "react";
-import { CalculatorInputs, CityCategory } from "@/lib/calculator";
+import { CalculatorInputs, CityCategory, TACityType, PensionType, TaxRegime } from "@/lib/calculator";
 
-const STORAGE_KEY = "8cpc_calculator_inputs";
+const STORAGE_KEY = "8cpc_calculator_inputs_v2";
 
 const defaultInputs: CalculatorInputs = {
+  payLevel: "7",
   basicPay: 44900,
-  payLevel: 7,
-  fitmentFactor: 2.57,
   cityCategory: "X",
+  hraPercent8CPC: 24,
   currentDA: 60,
+  taCity: "higher_tpta",
+  fitmentFactor: 2.57,
+  pensionType: "nps",
+  isCGHSBeneficiary: true,
+  taxRegime: "new",
 };
 
 export function useCalculatorStore() {
   const [inputs, setInputs] = useState<CalculatorInputs>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored);
-      }
-    } catch (e) {
-      console.error("Failed to parse stored inputs", e);
-    }
+      if (stored) return { ...defaultInputs, ...JSON.parse(stored) };
+    } catch (_) {}
     return defaultInputs;
   });
 
