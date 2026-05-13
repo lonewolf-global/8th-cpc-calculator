@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCalculatorStore } from "@/hooks/use-calculator-store";
+import { useAnimatedValue } from "@/hooks/use-animated-value";
 import {
   calculateSalary,
   FITMENT_STOPS,
@@ -108,6 +109,11 @@ export default function Home() {
 
   const comparison = calculateSalary(inputs);
 
+  const animBeforeNet = useAnimatedValue(comparison.before.netPay);
+  const animAfterNet  = useAnimatedValue(comparison.after.netPay);
+  const animNetInc    = useAnimatedValue(comparison.netIncrease);
+  const animNetPayInc = useAnimatedValue(comparison.netPayIncrease);
+
   const handlePrint = () => window.print();
 
   // 7th CPC current HRA label
@@ -137,7 +143,7 @@ export default function Home() {
                 <SelectTrigger id="payLevel" data-testid="select-pay-level">
                   <SelectValue placeholder="Select Pay Level" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="max-h-[min(40vh,18rem)] overflow-y-auto">
                   {PAY_MATRIX_DATA.map((row) => (
                     <SelectItem key={row.level} value={row.level}>
                       Level {row.level}
@@ -161,7 +167,7 @@ export default function Home() {
                 <SelectTrigger id="basicPay" data-testid="select-basic-pay">
                   <SelectValue placeholder="Select Basic Pay" />
                 </SelectTrigger>
-                <SelectContent className="max-h-72">
+                <SelectContent position="popper" className="max-h-[min(40vh,18rem)] overflow-y-auto">
                   {cells.map((cell, i) => (
                     <SelectItem key={cell} value={cell.toString()}>
                       {formatCurrency(cell)}
@@ -196,7 +202,7 @@ export default function Home() {
                   <SelectTrigger data-testid="select-da" className="w-36">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent position="popper" className="max-h-[min(40vh,14rem)] overflow-y-auto">
                     {[42, 46, 50, 53, 55, 58, 60].map((da) => (
                       <SelectItem key={da} value={da.toString()}>
                         {da}%{da === 60 ? " (current)" : ""}
@@ -254,7 +260,7 @@ export default function Home() {
                     <SelectTrigger data-testid="select-hra-8cpc">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent position="popper" className="max-h-[min(40vh,14rem)] overflow-y-auto">
                       {hraOpts.map((pct) => (
                         <SelectItem key={pct} value={pct.toString()}>
                           {pct}%{pct === hraOpts[0] ? " (base, DA reset)" : pct === hraOpts[hraOpts.length - 1] ? " (current, if merged)" : " (mid-tier)"}
@@ -280,7 +286,7 @@ export default function Home() {
                 <SelectTrigger data-testid="select-ta-city">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="max-h-[min(40vh,18rem)] overflow-y-auto">
                   {TA_CITY_OPTIONS.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       <div>
@@ -457,9 +463,9 @@ export default function Home() {
         {/* Before / After cards */}
         <div className="grid sm:grid-cols-2 gap-4">
           {/* BEFORE */}
-          <Card className="border-slate-200">
-            <CardHeader className="pb-3 border-b border-slate-200 bg-slate-50/60">
-              <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wide">7th CPC — Current</CardTitle>
+          <Card className="card-lift">
+            <CardHeader className="pb-3 border-b border-border/60 bg-muted/20">
+              <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">7th CPC — Current</CardTitle>
             </CardHeader>
             <CardContent className="pt-4 space-y-0">
               <RowItem label="Basic Pay" value={formatCurrency(comparison.before.basicPay)} />
@@ -481,18 +487,18 @@ export default function Home() {
                 <RowItem label="Total Deductions" value={formatCurrency(comparison.before.deductions.total)} highlight />
                 <div className="flex justify-between items-center pt-3 mt-1">
                   <span className="font-extrabold text-base">Net In-Hand</span>
-                  <span className="font-extrabold text-base text-primary">{formatCurrency(comparison.before.netPay)}</span>
+                  <span className="font-extrabold text-base text-primary animated-value">{formatCurrency(animBeforeNet)}</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* AFTER */}
-          <Card className="border-orange-200 bg-orange-50/30 shadow-md ring-1 ring-orange-100">
-            <CardHeader className="pb-3 border-b border-orange-200 bg-orange-50/80">
-              <CardTitle className="text-sm font-semibold text-orange-700 uppercase tracking-wide flex items-center justify-between">
+          <Card className="card-lift border-primary/25 ring-1 ring-primary/10 shadow-lg shadow-primary/5">
+            <CardHeader className="pb-3 border-b border-primary/20 bg-primary/5">
+              <CardTitle className="text-sm font-semibold text-primary uppercase tracking-widest flex items-center justify-between">
                 <span>8th CPC — Projected</span>
-                <Badge variant="outline" className="border-orange-300 text-orange-700 font-mono text-xs">
+                <Badge variant="outline" className="border-primary/40 text-primary font-mono text-xs">
                   {inputs.fitmentFactor.toFixed(2)}×
                 </Badge>
               </CardTitle>
@@ -504,8 +510,8 @@ export default function Home() {
               <RowItem label="Transport Allowance" value={formatCurrency(comparison.after.taAmount)} />
               <RowItem label="Gross Pay" value={formatCurrency(comparison.after.grossPay)} highlight />
 
-              <div className="mt-4 pt-3 border-t border-dashed border-orange-200 space-y-0">
-                <p className="text-[10px] uppercase tracking-widest text-orange-600/70 font-bold mb-2">Deductions</p>
+              <div className="mt-4 pt-3 border-t border-dashed border-primary/20 space-y-0">
+                <p className="text-[10px] uppercase tracking-widest text-primary/60 font-bold mb-2">Deductions</p>
                 {inputs.pensionType === "nps" && (
                   <RowItem label="NPS (10% of Basic)" value={`− ${formatCurrency(comparison.after.deductions.nps)}`} />
                 )}
@@ -517,7 +523,7 @@ export default function Home() {
                 <RowItem label="Total Deductions" value={formatCurrency(comparison.after.deductions.total)} highlight />
                 <div className="flex justify-between items-center pt-3 mt-1">
                   <span className="font-extrabold text-base">Net In-Hand</span>
-                  <span className="font-extrabold text-xl text-orange-700">{formatCurrency(comparison.after.netPay)}</span>
+                  <span className="font-extrabold text-xl text-primary animated-value">{formatCurrency(animAfterNet)}</span>
                 </div>
               </div>
             </CardContent>
@@ -530,12 +536,12 @@ export default function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center divide-x divide-primary-foreground/20">
               <div>
                 <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Gross Increase</p>
-                <p className="text-2xl font-bold">{formatCurrency(comparison.netIncrease)}</p>
+                <p className="text-2xl font-bold animated-value">{formatCurrency(animNetInc)}</p>
                 <p className="text-primary-foreground/60 text-xs">per month</p>
               </div>
               <div>
                 <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Net Increase</p>
-                <p className="text-2xl font-bold text-secondary">{formatCurrency(comparison.netPayIncrease)}</p>
+                <p className="text-2xl font-bold text-secondary animated-value">{formatCurrency(animNetPayInc)}</p>
                 <p className="text-primary-foreground/60 text-xs">after deductions</p>
               </div>
               <div>
@@ -593,7 +599,7 @@ export default function Home() {
                       <td className="px-4 py-2.5 text-right">{formatCurrency(temp.after.basicPay)}</td>
                       <td className="px-4 py-2.5 text-right font-semibold">{formatCurrency(temp.after.grossPay)}</td>
                       <td className="px-4 py-2.5 text-right">{formatCurrency(temp.after.netPay)}</td>
-                      <td className="px-4 py-2.5 text-right text-emerald-600 font-medium">+{temp.percentIncrease.toFixed(1)}%</td>
+                      <td className="px-4 py-2.5 text-right text-secondary font-medium">+{temp.percentIncrease.toFixed(1)}%</td>
                     </tr>
                   );
                 })}
