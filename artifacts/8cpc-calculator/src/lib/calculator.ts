@@ -1,7 +1,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type CityCategory = "X" | "Y" | "Z";
-export type TACityType = "higher_tpta" | "other" | "higher_tpta_pwd" | "other_pwd";
+export type TACityType = "higher_tpta" | "other" | "higher_tpta_pwd" | "other_pwd" | "govt_vehicle";
 export type PensionType = "nps" | "ops";
 export type TaxRegime = "new" | "old";
 
@@ -131,6 +131,9 @@ export function getBaseTA(
   basicPay: number,
   taCity: TACityType
 ): number {
+  // Govt vehicle: no TA allowed
+  if (taCity === "govt_vehicle") return 0;
+
   const levelNum = getLevelNum(levelStr);
   const isHigher = taCity === "higher_tpta" || taCity === "higher_tpta_pwd";
   const isPWD = taCity === "higher_tpta_pwd" || taCity === "other_pwd";
@@ -156,10 +159,9 @@ export function getBaseTA(
 
 export function getCGEGIS(levelStr: string): number {
   const n = getLevelNum(levelStr);
-  if (n <= 2) return 30;
-  if (n <= 6) return 60;
-  if (n <= 9) return 120;
-  return 240;
+  if (n <= 5) return 30;
+  if (n <= 9) return 60;
+  return 120; // Level 10-18
 }
 
 // ─── CGHS ────────────────────────────────────────────────────────────────────
@@ -385,4 +387,5 @@ export const TA_CITY_OPTIONS = [
   { value: "other" as TACityType,           label: "Other Cities",             description: "All cities not listed under Higher TPTA" },
   { value: "higher_tpta_pwd" as TACityType, label: "Higher TPTA Cities (PWD)", description: "Persons with Disability — 2× TA (Higher TPTA)" },
   { value: "other_pwd" as TACityType,       label: "Other Cities (PWD)",       description: "Persons with Disability — 2× TA (Other Cities)" },
+  { value: "govt_vehicle" as TACityType,    label: "Govt. Vehicle Provided",   description: "No Transport Allowance applicable — TA = ₹0" },
 ];
