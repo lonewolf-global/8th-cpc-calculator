@@ -107,17 +107,18 @@ export default function Home() {
     Math.abs(cur.value - inputs.fitmentFactor) < Math.abs(prev.value - inputs.fitmentFactor) ? cur : prev
   );
 
-  const comparison = calculateSalary(inputs);
+  const hasLevel = inputs.payLevel !== "" && inputs.basicPay > 0;
+  const comparison = hasLevel ? calculateSalary(inputs) : null;
 
-  const animBeforeNet = useAnimatedValue(comparison.before.netPay);
-  const animAfterNet  = useAnimatedValue(comparison.after.netPay);
-  const animNetInc    = useAnimatedValue(comparison.netIncrease);
-  const animNetPayInc = useAnimatedValue(comparison.netPayIncrease);
+  const animBeforeNet = useAnimatedValue(comparison?.before.netPay ?? 0);
+  const animAfterNet  = useAnimatedValue(comparison?.after.netPay ?? 0);
+  const animNetInc    = useAnimatedValue(comparison?.netIncrease ?? 0);
+  const animNetPayInc = useAnimatedValue(comparison?.netPayIncrease ?? 0);
 
   const handlePrint = () => window.print();
 
   // 7th CPC current HRA label
-  const currentHRALabel = `${(comparison.before.hraRate * 100).toFixed(0)}%`;
+  const currentHRALabel = comparison ? `${(comparison.before.hraRate * 100).toFixed(0)}%` : "—";
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
@@ -244,7 +245,7 @@ export default function Home() {
                   <Label className="text-xs text-muted-foreground">Current HRA (auto, based on DA)</Label>
                   <div className="h-9 px-3 border rounded-md bg-muted/30 flex items-center text-sm font-medium">
                     {currentHRALabel}
-                    <span className="text-muted-foreground ml-1 text-xs">({formatCurrency(comparison.before.hraAmount)}/mo)</span>
+                    {comparison && <span className="text-muted-foreground ml-1 text-xs">({formatCurrency(comparison.before.hraAmount)}/mo)</span>}
                   </div>
                 </div>
 
@@ -297,16 +298,18 @@ export default function Home() {
                   ))}
                 </SelectContent>
               </Select>
-              <div className="bg-muted/30 rounded-md p-2.5 text-xs text-muted-foreground space-y-1 mt-1">
-                <p>
-                  <strong>Base TA:</strong> {formatCurrency(comparison.before.taBase)} &nbsp;+&nbsp;
-                  <strong>DA on TA:</strong> {formatCurrency(comparison.before.taDA)} &nbsp;=&nbsp;
-                  <strong className="text-foreground">{formatCurrency(comparison.before.taAmount)}</strong>
-                </p>
-                <p className="text-[10px]">
-                  Level {inputs.payLevel} · {TA_CITY_OPTIONS.find(o => o.value === inputs.taCity)?.label}
-                </p>
-              </div>
+              {comparison && (
+                <div className="bg-muted/30 rounded-md p-2.5 text-xs text-muted-foreground space-y-1 mt-1">
+                  <p>
+                    <strong>Base TA:</strong> {formatCurrency(comparison.before.taBase)} &nbsp;+&nbsp;
+                    <strong>DA on TA:</strong> {formatCurrency(comparison.before.taDA)} &nbsp;=&nbsp;
+                    <strong className="text-foreground">{formatCurrency(comparison.before.taAmount)}</strong>
+                  </p>
+                  <p className="text-[10px]">
+                    Level {inputs.payLevel} · {TA_CITY_OPTIONS.find(o => o.value === inputs.taCity)?.label}
+                  </p>
+                </div>
+              )}
             </div>
 
             <Separator className="my-4" />
@@ -453,167 +456,198 @@ export default function Home() {
 
       {/* ── OUTPUT PANEL ─────────────────────────────────────────────── */}
       <div className="xl:col-span-7 space-y-5">
-        <div className="flex justify-between items-center no-print">
-          <h2 className="text-xl font-bold text-foreground font-serif">Salary Projection</h2>
-          <Button variant="outline" size="sm" onClick={handlePrint} className="flex gap-2">
-            <Printer className="h-4 w-4" /> Print Report
-          </Button>
-        </div>
 
-        {/* Before / After cards */}
-        <div className="grid sm:grid-cols-2 gap-4">
-          {/* BEFORE */}
-          <Card className="card-lift">
-            <CardHeader className="pb-3 border-b border-border/60 bg-muted/20">
-              <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">7th CPC — Current</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-0">
-              <RowItem label="Basic Pay" value={formatCurrency(comparison.before.basicPay)} />
-              <RowItem label="DA" sub={`(${comparison.before.daPercent}%)`} value={formatCurrency(comparison.before.daAmount)} />
-              <RowItem label="HRA" sub={`(${currentHRALabel})`} value={formatCurrency(comparison.before.hraAmount)} />
-              <RowItem label="Transport Allowance" value={formatCurrency(comparison.before.taAmount)} />
-              <RowItem label="Gross Pay" value={formatCurrency(comparison.before.grossPay)} highlight />
-
-              <div className="mt-4 pt-3 border-t border-dashed space-y-0">
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-2">Deductions</p>
-                {inputs.pensionType === "nps" && (
-                  <RowItem label="NPS (10% Basic+DA)" value={`− ${formatCurrency(comparison.before.deductions.nps)}`} />
-                )}
-                <RowItem label="CGEGIS" value={`− ${formatCurrency(comparison.before.deductions.cgegis)}`} />
-                {inputs.isCGHSBeneficiary && (
-                  <RowItem label="CGHS Subscription" value={`− ${formatCurrency(comparison.before.deductions.cghs)}`} />
-                )}
-                <RowItem label={`Income Tax (${inputs.taxRegime === "new" ? "New" : "Old"} Regime, est.)`} value={`− ${formatCurrency(comparison.before.deductions.incomeTax)}`} />
-                <RowItem label="Total Deductions" value={formatCurrency(comparison.before.deductions.total)} highlight />
-                <div className="flex justify-between items-center pt-3 mt-1">
-                  <span className="font-extrabold text-base">Net In-Hand</span>
-                  <span className="font-extrabold text-base text-primary animated-value">{formatCurrency(animBeforeNet)}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* AFTER */}
-          <Card className="card-lift border-primary/25 ring-1 ring-primary/10 shadow-lg shadow-primary/5">
-            <CardHeader className="pb-3 border-b border-primary/20 bg-primary/5">
-              <CardTitle className="text-sm font-semibold text-primary uppercase tracking-widest flex items-center justify-between">
-                <span>8th CPC — Projected</span>
-                <Badge variant="outline" className="border-primary/40 text-primary font-mono text-xs">
-                  {inputs.fitmentFactor.toFixed(2)}×
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-0">
-              <RowItem label="New Basic Pay" value={formatCurrency(comparison.after.basicPay)} />
-              <RowItem label="DA" sub="(0% — resets)" value="₹0" />
-              <RowItem label="HRA" sub={`(${inputs.hraPercent8CPC}%)`} value={formatCurrency(comparison.after.hraAmount)} />
-              <RowItem label="Transport Allowance" value={formatCurrency(comparison.after.taAmount)} />
-              <RowItem label="Gross Pay" value={formatCurrency(comparison.after.grossPay)} highlight />
-
-              <div className="mt-4 pt-3 border-t border-dashed border-primary/20 space-y-0">
-                <p className="text-[10px] uppercase tracking-widest text-primary/60 font-bold mb-2">Deductions</p>
-                {inputs.pensionType === "nps" && (
-                  <RowItem label="NPS (10% of Basic)" value={`− ${formatCurrency(comparison.after.deductions.nps)}`} />
-                )}
-                <RowItem label="CGEGIS" value={`− ${formatCurrency(comparison.after.deductions.cgegis)}`} />
-                {inputs.isCGHSBeneficiary && (
-                  <RowItem label="CGHS Subscription" value={`− ${formatCurrency(comparison.after.deductions.cghs)}`} />
-                )}
-                <RowItem label={`Income Tax (${inputs.taxRegime === "new" ? "New" : "Old"} Regime, est.)`} value={`− ${formatCurrency(comparison.after.deductions.incomeTax)}`} />
-                <RowItem label="Total Deductions" value={formatCurrency(comparison.after.deductions.total)} highlight />
-                <div className="flex justify-between items-center pt-3 mt-1">
-                  <span className="font-extrabold text-base">Net In-Hand</span>
-                  <span className="font-extrabold text-xl text-primary animated-value">{formatCurrency(animAfterNet)}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Impact summary bar */}
-        <Card className="bg-primary text-primary-foreground shadow-md">
-          <CardContent className="p-5">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center divide-x divide-primary-foreground/20">
-              <div>
-                <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Gross Increase</p>
-                <p className="text-2xl font-bold animated-value">{formatCurrency(animNetInc)}</p>
-                <p className="text-primary-foreground/60 text-xs">per month</p>
-              </div>
-              <div>
-                <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Net Increase</p>
-                <p className="text-2xl font-bold text-secondary animated-value">{formatCurrency(animNetPayInc)}</p>
-                <p className="text-primary-foreground/60 text-xs">after deductions</p>
-              </div>
-              <div>
-                <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Gross Hike</p>
-                <p className="text-2xl font-bold">+{comparison.percentIncrease.toFixed(1)}%</p>
-                <p className="text-primary-foreground/60 text-xs">on gross salary</p>
-              </div>
-              <div>
-                <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Min Pension</p>
-                <p className="text-sm font-bold mt-1">{formatCurrency(comparison.minimumPensionBefore)}</p>
-                <ChevronRight className="h-3 w-3 inline mx-1 opacity-60" />
-                <p className="text-sm font-bold">{formatCurrency(comparison.minimumPensionAfter)}</p>
-              </div>
+        {!hasLevel ? (
+          /* ── Welcome / Empty State ── */
+          <div className="flex flex-col items-center justify-center min-h-[420px] text-center space-y-6 py-10">
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-[0_0_40px_rgba(139,92,246,0.15)]">
+              <IndianRupee className="h-9 w-9 text-primary" />
             </div>
-          </CardContent>
-        </Card>
+            <div className="space-y-2 max-w-sm">
+              <h2 className="text-2xl font-bold text-foreground">Your Salary Awaits</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Select your <strong className="text-foreground">Pay Level</strong> from the left panel to instantly see how the 8th Pay Commission will change your take-home salary.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 text-center w-full max-w-xs">
+              {[
+                { label: "Gross Increase", icon: "📈" },
+                { label: "Arrears Estimate", icon: "📅" },
+                { label: "Pension Impact", icon: "🛡️" },
+              ].map((item) => (
+                <div key={item.label} className="p-3 rounded-xl border border-border/40 bg-card/50 space-y-1">
+                  <div className="text-2xl">{item.icon}</div>
+                  <p className="text-[10px] text-muted-foreground leading-tight">{item.label}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground/60">← Start by selecting your Pay Level on the left</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-between items-center no-print">
+              <h2 className="text-xl font-bold text-foreground font-serif">Salary Projection</h2>
+              <Button variant="outline" size="sm" onClick={handlePrint} className="flex gap-2">
+                <Printer className="h-4 w-4" /> Print Report
+              </Button>
+            </div>
 
-        {/* Fitment factor comparison table */}
-        <Card className="no-print">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Fitment Factor Scenario Comparison</CardTitle>
-            <CardDescription className="text-xs">
-              Your Level {inputs.payLevel} · {formatCurrency(inputs.basicPay)} basic pay across all scenarios
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="overflow-x-auto p-0">
-            <table className="w-full text-sm border-collapse">
-              <thead className="bg-muted/50 text-muted-foreground text-[11px] uppercase">
-                <tr>
-                  <th className="px-4 py-3 font-semibold text-left">Scenario</th>
-                  <th className="px-4 py-3 font-semibold text-right">Factor</th>
-                  <th className="px-4 py-3 font-semibold text-right">New Basic</th>
-                  <th className="px-4 py-3 font-semibold text-right">Gross Pay</th>
-                  <th className="px-4 py-3 font-semibold text-right">Net Pay</th>
-                  <th className="px-4 py-3 font-semibold text-right">Gross Hike</th>
-                </tr>
-              </thead>
-              <tbody>
-                {FITMENT_STOPS.map((stop) => {
-                  const temp = calculateSalary({ ...inputs, fitmentFactor: stop.value });
-                  const isSelected = Math.abs(inputs.fitmentFactor - stop.value) < 0.005;
-                  return (
-                    <tr
-                      key={stop.value}
-                      className={`border-b last:border-0 cursor-pointer transition-colors ${
-                        isSelected ? "bg-primary/5" : "hover:bg-muted/30"
-                      }`}
-                      onClick={() => { updateInput("fitmentFactor", stop.value); setSliderValue([stop.value]); }}
-                    >
-                      <td className="px-4 py-2.5 font-medium">
-                        {stop.description}
-                        {isSelected && <Badge className="ml-2 text-[9px] py-0 h-4" variant="default">Selected</Badge>}
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-mono">{stop.value}×</td>
-                      <td className="px-4 py-2.5 text-right">{formatCurrency(temp.after.basicPay)}</td>
-                      <td className="px-4 py-2.5 text-right font-semibold">{formatCurrency(temp.after.grossPay)}</td>
-                      <td className="px-4 py-2.5 text-right">{formatCurrency(temp.after.netPay)}</td>
-                      <td className="px-4 py-2.5 text-right text-secondary font-medium">+{temp.percentIncrease.toFixed(1)}%</td>
+            {/* Before / After cards */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              {/* BEFORE */}
+              <Card className="card-lift">
+                <CardHeader className="pb-3 border-b border-border/60 bg-muted/20">
+                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">7th CPC — Current</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-0">
+                  <RowItem label="Basic Pay" value={formatCurrency(comparison!.before.basicPay)} />
+                  <RowItem label="DA" sub={`(${comparison!.before.daPercent}%)`} value={formatCurrency(comparison!.before.daAmount)} />
+                  <RowItem label="HRA" sub={`(${currentHRALabel})`} value={formatCurrency(comparison!.before.hraAmount)} />
+                  <RowItem label="Transport Allowance" value={formatCurrency(comparison!.before.taAmount)} />
+                  <RowItem label="Gross Pay" value={formatCurrency(comparison!.before.grossPay)} highlight />
+
+                  <div className="mt-4 pt-3 border-t border-dashed space-y-0">
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-2">Deductions</p>
+                    {inputs.pensionType === "nps" && (
+                      <RowItem label="NPS (10% Basic+DA)" value={`− ${formatCurrency(comparison!.before.deductions.nps)}`} />
+                    )}
+                    <RowItem label="CGEGIS" value={`− ${formatCurrency(comparison!.before.deductions.cgegis)}`} />
+                    {inputs.isCGHSBeneficiary && (
+                      <RowItem label="CGHS Subscription" value={`− ${formatCurrency(comparison!.before.deductions.cghs)}`} />
+                    )}
+                    <RowItem label={`Income Tax (${inputs.taxRegime === "new" ? "New" : "Old"} Regime, est.)`} value={`− ${formatCurrency(comparison!.before.deductions.incomeTax)}`} />
+                    <RowItem label="Total Deductions" value={formatCurrency(comparison!.before.deductions.total)} highlight />
+                    <div className="flex justify-between items-center pt-3 mt-1">
+                      <span className="font-extrabold text-base">Net In-Hand</span>
+                      <span className="font-extrabold text-base text-primary animated-value">{formatCurrency(animBeforeNet)}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* AFTER */}
+              <Card className="card-lift border-primary/25 ring-1 ring-primary/10 shadow-lg shadow-primary/5">
+                <CardHeader className="pb-3 border-b border-primary/20 bg-primary/5">
+                  <CardTitle className="text-sm font-semibold text-primary uppercase tracking-widest flex items-center justify-between">
+                    <span>8th CPC — Projected</span>
+                    <Badge variant="outline" className="border-primary/40 text-primary font-mono text-xs">
+                      {inputs.fitmentFactor.toFixed(2)}×
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-0">
+                  <RowItem label="New Basic Pay" value={formatCurrency(comparison!.after.basicPay)} />
+                  <RowItem label="DA" sub="(0% — resets)" value="₹0" />
+                  <RowItem label="HRA" sub={`(${inputs.hraPercent8CPC}%)`} value={formatCurrency(comparison!.after.hraAmount)} />
+                  <RowItem label="Transport Allowance" value={formatCurrency(comparison!.after.taAmount)} />
+                  <RowItem label="Gross Pay" value={formatCurrency(comparison!.after.grossPay)} highlight />
+
+                  <div className="mt-4 pt-3 border-t border-dashed border-primary/20 space-y-0">
+                    <p className="text-[10px] uppercase tracking-widest text-primary/60 font-bold mb-2">Deductions</p>
+                    {inputs.pensionType === "nps" && (
+                      <RowItem label="NPS (10% of Basic)" value={`− ${formatCurrency(comparison!.after.deductions.nps)}`} />
+                    )}
+                    <RowItem label="CGEGIS" value={`− ${formatCurrency(comparison!.after.deductions.cgegis)}`} />
+                    {inputs.isCGHSBeneficiary && (
+                      <RowItem label="CGHS Subscription" value={`− ${formatCurrency(comparison!.after.deductions.cghs)}`} />
+                    )}
+                    <RowItem label={`Income Tax (${inputs.taxRegime === "new" ? "New" : "Old"} Regime, est.)`} value={`− ${formatCurrency(comparison!.after.deductions.incomeTax)}`} />
+                    <RowItem label="Total Deductions" value={formatCurrency(comparison!.after.deductions.total)} highlight />
+                    <div className="flex justify-between items-center pt-3 mt-1">
+                      <span className="font-extrabold text-base">Net In-Hand</span>
+                      <span className="font-extrabold text-xl text-primary animated-value">{formatCurrency(animAfterNet)}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Impact summary bar */}
+            <Card className="bg-primary text-primary-foreground shadow-md">
+              <CardContent className="p-5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center divide-x divide-primary-foreground/20">
+                  <div>
+                    <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Gross Increase</p>
+                    <p className="text-2xl font-bold animated-value">{formatCurrency(animNetInc)}</p>
+                    <p className="text-primary-foreground/60 text-xs">per month</p>
+                  </div>
+                  <div>
+                    <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Net Increase</p>
+                    <p className="text-2xl font-bold text-secondary animated-value">{formatCurrency(animNetPayInc)}</p>
+                    <p className="text-primary-foreground/60 text-xs">after deductions</p>
+                  </div>
+                  <div>
+                    <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Gross Hike</p>
+                    <p className="text-2xl font-bold">+{comparison!.percentIncrease.toFixed(1)}%</p>
+                    <p className="text-primary-foreground/60 text-xs">on gross salary</p>
+                  </div>
+                  <div>
+                    <p className="text-primary-foreground/60 text-[10px] uppercase tracking-widest mb-1">Min Pension</p>
+                    <p className="text-sm font-bold mt-1">{formatCurrency(comparison!.minimumPensionBefore)}</p>
+                    <ChevronRight className="h-3 w-3 inline mx-1 opacity-60" />
+                    <p className="text-sm font-bold">{formatCurrency(comparison!.minimumPensionAfter)}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Fitment factor comparison table */}
+            <Card className="no-print">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Fitment Factor Scenario Comparison</CardTitle>
+                <CardDescription className="text-xs">
+                  Level {inputs.payLevel} · {formatCurrency(inputs.basicPay)} basic pay across all scenarios
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="overflow-x-auto p-0">
+                <table className="w-full text-sm border-collapse">
+                  <thead className="bg-muted/50 text-muted-foreground text-[11px] uppercase">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold text-left">Scenario</th>
+                      <th className="px-4 py-3 font-semibold text-right">Factor</th>
+                      <th className="px-4 py-3 font-semibold text-right">New Basic</th>
+                      <th className="px-4 py-3 font-semibold text-right">Gross Pay</th>
+                      <th className="px-4 py-3 font-semibold text-right">Net Pay</th>
+                      <th className="px-4 py-3 font-semibold text-right">Gross Hike</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
+                  </thead>
+                  <tbody>
+                    {FITMENT_STOPS.map((stop) => {
+                      const temp = calculateSalary({ ...inputs, fitmentFactor: stop.value });
+                      const isSelected = Math.abs(inputs.fitmentFactor - stop.value) < 0.005;
+                      return (
+                        <tr
+                          key={stop.value}
+                          className={`border-b last:border-0 cursor-pointer transition-colors ${
+                            isSelected ? "bg-primary/5" : "hover:bg-muted/30"
+                          }`}
+                          onClick={() => { updateInput("fitmentFactor", stop.value); setSliderValue([stop.value]); }}
+                        >
+                          <td className="px-4 py-2.5 font-medium">
+                            {stop.description}
+                            {isSelected && <Badge className="ml-2 text-[9px] py-0 h-4" variant="default">Selected</Badge>}
+                          </td>
+                          <td className="px-4 py-2.5 text-right font-mono">{stop.value}×</td>
+                          <td className="px-4 py-2.5 text-right">{formatCurrency(temp.after.basicPay)}</td>
+                          <td className="px-4 py-2.5 text-right font-semibold">{formatCurrency(temp.after.grossPay)}</td>
+                          <td className="px-4 py-2.5 text-right">{formatCurrency(temp.after.netPay)}</td>
+                          <td className="px-4 py-2.5 text-right text-secondary font-medium">+{temp.percentIncrease.toFixed(1)}%</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
 
-        {/* Notes */}
-        <div className="text-xs text-muted-foreground space-y-1 no-print">
-          <p>Income tax estimate is approximate (no surcharge, assumes standard deduction only). Actual liability depends on other income and exemptions.</p>
-          <p>TA after 8th CPC shown at base rate (no DA component, as DA resets to 0%). Will increase as DA rises.</p>
-          {inputs.pensionType === "ops" && <p>OPS employees have no NPS deduction. Pension is 50% of last drawn basic pay — a defined benefit, not subject to market risk.</p>}
-        </div>
+            {/* Notes */}
+            <div className="text-xs text-muted-foreground space-y-1 no-print">
+              <p>Income tax estimate is approximate (no surcharge, assumes standard deduction only). Actual liability depends on other income and exemptions.</p>
+              <p>TA after 8th CPC shown at base rate (no DA component, as DA resets to 0%). Will increase as DA rises.</p>
+              {inputs.pensionType === "ops" && <p>OPS employees have no NPS deduction. Pension is 50% of last drawn basic pay — a defined benefit, not subject to market risk.</p>}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

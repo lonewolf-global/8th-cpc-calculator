@@ -7,6 +7,7 @@ import { Layout } from "@/components/layout";
 import Home from "@/pages/home";
 import PayMatrix from "@/pages/pay-matrix";
 import Arrears from "@/pages/arrears";
+import Pension from "@/pages/pension";
 import About from "@/pages/about";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/pay-matrix" component={PayMatrix} />
         <Route path="/arrears" component={Arrears} />
+        <Route path="/pension" component={Pension} />
         <Route path="/about" component={About} />
         <Route component={NotFound} />
       </Switch>

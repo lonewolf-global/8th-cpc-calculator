@@ -367,6 +367,131 @@ export function calculateArrears(
   return { monthlyArrears, months, totalArrears: monthlyArrears * months };
 }
 
+// ─── Pension Calculations ─────────────────────────────────────────────────────
+
+export interface OPSPensionResult {
+  basicPension: number;
+  familyPension: number;          // 30% of last basic
+  enhancedFamilyPension: number;  // 50% of last basic (first 7 yrs if service > 7 yrs)
+  gratuity: number;               // Retirement gratuity (capped)
+  commutedLumpSum: number;        // 40% commuted pension × 12 × commutation factor
+  reducedMonthlyPension: number;  // After 40% commutation (restored after 15 yrs)
+  leaveEncashment: number;        // 300 days EL encashment
+  minPension: number;
+  maxPension: number;
+}
+
+export interface NPSProjectionResult {
+  monthlyEmployeeContrib: number;
+  monthlyGovtContrib: number;
+  monthlyTotalContrib: number;
+  projectedCorpus: number;
+  lumpSum: number;        // 60% tax-free
+  annuityCorpus: number;  // 40% used to buy annuity
+  monthlyPension: number; // annuity @ 6% p.a.
+}
+
+/**
+ * OPS Pension under Central Civil Services (Pension) Rules.
+ * basicPay        — last drawn basic pay
+ * da              — DA% at retirement
+ * qualifyingYears — years of qualifying service (min 10 for pension, max 33 for full)
+ * retirementAge   — used for commutation factor
+ * fitmentFactor   — to project post-8th CPC amounts
+ * gratuityCapOld  — ₹20 lakhs (7th CPC cap)
+ * gratuityCapNew  — ₹30 lakhs (expected 8th CPC cap)
+ */
+export function calculateOPSPension(
+  basicPay: number,
+  da: number,
+  qualifyingYears: number,
+  retirementAge: number,
+  fitmentFactor: number
+): { before: OPSPensionResult; after: OPSPensionResult } {
+  const commutationFactor = retirementAge <= 55 ? 10.645 : retirementAge <= 58 ? 9.188 : 8.194;
+
+  function computeOPS(bp: number, daRate: number, gratuityCapLakhs: number): OPSPensionResult {
+    const serviceRatio = Math.min(qualifyingYears, 33) / 33;
+    const rawPension = Math.round(bp * 0.50 * serviceRatio);
+    const minP = gratuityCapLakhs === 20 ? 9000 : 18000;  // 7th CPC / 8th CPC min
+    const maxP = Math.round(bp * 0.50);                    // 50% of highest pay
+    const basicPension = Math.max(minP, rawPension);
+
+    const familyPension = Math.round(bp * 0.30);
+    const enhancedFamilyPension = Math.round(bp * 0.50);
+
+    // Gratuity = 1/4 × (Basic + DA) × completed 6-monthly periods (max 33 yrs = 66 halves)
+    const daAmount = Math.round(bp * daRate / 100);
+    const emoluments = bp + daAmount;
+    const halfYears = Math.min(qualifyingYears * 2, 66);
+    const rawGratuity = Math.round((emoluments / 4) * halfYears);
+    const gratuity = Math.min(rawGratuity, gratuityCapLakhs * 100000);
+
+    // Commutation: 40% of pension
+    const commuted40 = Math.round(basicPension * 0.40);
+    const commutedLumpSum = Math.round(commuted40 * 12 * commutationFactor);
+    const reducedMonthlyPension = basicPension - commuted40;
+
+    // Leave encashment: max 300 days EL at (Basic + DA) / 30
+    const leaveEncashment = Math.round((emoluments / 30) * 300);
+
+    return {
+      basicPension,
+      familyPension,
+      enhancedFamilyPension,
+      gratuity,
+      commutedLumpSum,
+      reducedMonthlyPension,
+      leaveEncashment,
+      minPension: minP,
+      maxPension: maxP,
+    };
+  }
+
+  const before = computeOPS(basicPay, da, 20);
+  const afterBasic = r100(basicPay * fitmentFactor);
+  const after = computeOPS(afterBasic, 0, 30); // DA resets to 0 under 8th CPC
+
+  return { before, after };
+}
+
+/**
+ * NPS corpus and monthly pension projection.
+ * Monthly contribution = 10% (employee) + 14% (government) = 24% of (Basic + DA).
+ * Assumed return: 10% p.a. compounded monthly.
+ * At retirement: 60% lump sum (tax-free), 40% annuity at 6% p.a.
+ */
+export function calculateNPSProjection(
+  basicPay: number,
+  da: number,
+  fitmentFactor: number,
+  yearsToRetirement: number,
+  annualReturn = 0.10,
+  annuityRate = 0.06
+): { before: NPSProjectionResult; after: NPSProjectionResult } {
+  function computeNPS(bp: number, daRate: number): NPSProjectionResult {
+    const daAmt = Math.round(bp * daRate / 100);
+    const base = bp + daAmt;
+    const monthlyEmployee = Math.round(base * 0.10);
+    const monthlyGovt = Math.round(base * 0.14);
+    const monthlyTotal = monthlyEmployee + monthlyGovt;
+    const annualContrib = monthlyTotal * 12;
+    const n = yearsToRetirement;
+    const r = annualReturn;
+    // FV of annuity due (contributions at start of each year)
+    const corpus = Math.round(annualContrib * (((1 + r) ** n - 1) / r) * (1 + r));
+    const lumpSum = Math.round(corpus * 0.60);
+    const annuityCorpus = corpus - lumpSum;
+    const monthlyPension = Math.round(annuityCorpus * annuityRate / 12);
+    return { monthlyEmployeeContrib: monthlyEmployee, monthlyGovtContrib: monthlyGovt, monthlyTotalContrib: monthlyTotal, projectedCorpus: corpus, lumpSum, annuityCorpus, monthlyPension };
+  }
+
+  const before = computeNPS(basicPay, da);
+  const afterBasic = r100(basicPay * fitmentFactor);
+  const after = computeNPS(afterBasic, 0); // DA resets
+  return { before, after };
+}
+
 // ─── Pay Matrix projection ────────────────────────────────────────────────────
 
 export function getProjectedPayMatrix(fitmentFactor: number) {
