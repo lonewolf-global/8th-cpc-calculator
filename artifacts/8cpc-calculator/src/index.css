@@ -78,8 +78,8 @@
 ────────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  --app-font-sans: 'Inter', system-ui, sans-serif;
-  --app-font-serif: 'Georgia', serif;
+  --app-font-sans: 'Outfit', system-ui, sans-serif;
+  --app-font-serif: 'Outfit', system-ui, sans-serif;
   --app-font-mono: 'JetBrains Mono', monospace;
 
   --background:             235 30%  8%;
@@ -191,45 +191,73 @@
   --chart-5: 38  88% 62%;
 }
 
-/* ─── Animated Background Orbs ─────────────────────────────────────────────── */
+/* ─── Animated Background — DOM-based orbs (more reliable than pseudo-elements) */
 
-body::before,
-body::after {
-  content: '';
-  position: fixed;
+.bg-orb-violet {
+  position: absolute;
+  width: 750px;
+  height: 750px;
   border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
+  background: radial-gradient(circle at center, hsl(252 85% 62% / 0.30), transparent 60%);
+  top: -200px;
+  left: -100px;
+  filter: blur(48px);
+  animation: orb-drift-a 22s ease-in-out infinite;
+  will-change: transform;
 }
 
-body::before {
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle at center, hsl(252 85% 58% / 0.18), transparent 65%);
-  top: -180px;
-  left: -120px;
-  animation: orb-a 28s ease-in-out infinite;
-}
-
-body::after {
-  width: 550px;
-  height: 550px;
-  background: radial-gradient(circle at center, hsl(200 90% 52% / 0.13), transparent 65%);
-  bottom: -120px;
+.bg-orb-cyan {
+  position: absolute;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, hsl(200 90% 56% / 0.22), transparent 60%);
+  bottom: -160px;
   right: -80px;
-  animation: orb-b 34s ease-in-out infinite;
+  filter: blur(56px);
+  animation: orb-drift-b 30s ease-in-out infinite;
+  will-change: transform;
 }
 
-@keyframes orb-a {
-  0%,100% { transform: translate(0,  0)   scale(1); }
-  30%     { transform: translate(100px, 80px) scale(1.12); }
-  65%     { transform: translate(-50px, 50px) scale(0.90); }
+.bg-orb-indigo {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, hsl(230 80% 60% / 0.15), transparent 60%);
+  top: 40%;
+  right: 25%;
+  filter: blur(60px);
+  animation: orb-drift-c 40s ease-in-out infinite;
+  will-change: transform;
 }
 
-@keyframes orb-b {
-  0%,100% { transform: translate(0,  0)    scale(1); }
-  35%     { transform: translate(-80px,-60px) scale(0.94); }
-  70%     { transform: translate(60px,-80px)  scale(1.08); }
+.dot-grid {
+  background-image: radial-gradient(circle, hsl(252 85% 70% / 0.18) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: grid-slide 80s linear infinite;
+}
+
+@keyframes orb-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  30%      { transform: translate(130px, 90px) scale(1.14); }
+  65%      { transform: translate(-50px, 65px) scale(0.88); }
+}
+
+@keyframes orb-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-100px, -80px) scale(0.92); }
+  75%      { transform: translate(80px, -100px) scale(1.1); }
+}
+
+@keyframes orb-drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(60px, -50px) scale(1.08); }
+}
+
+@keyframes grid-slide {
+  0%   { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
 }
 
 /* ─── Base Layer ─────────────────────────────────────────────────────────────── */

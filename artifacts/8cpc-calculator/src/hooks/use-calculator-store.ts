@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CalculatorInputs, CityCategory, TACityType, PensionType, TaxRegime } from "@/lib/calculator";
 
-const STORAGE_KEY = "8cpc_calculator_inputs_v3";
+const STORAGE_KEY = "8cpc_calculator_inputs_v4";
 
 const defaultInputs: CalculatorInputs = {
   payLevel: "",

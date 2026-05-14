@@ -486,7 +486,7 @@ export default function Home() {
         ) : (
           <>
             <div className="flex justify-between items-center no-print">
-              <h2 className="text-xl font-bold text-foreground font-serif">Salary Projection</h2>
+              <h2 className="text-xl font-bold text-foreground">Salary Projection</h2>
               <Button variant="outline" size="sm" onClick={handlePrint} className="flex gap-2">
                 <Printer className="h-4 w-4" /> Print Report
               </Button>

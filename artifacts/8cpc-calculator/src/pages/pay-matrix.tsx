@@ -27,7 +27,7 @@ export default function PayMatrix() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold font-serif mb-2">Projected 8th CPC Pay Matrix</h1>
+        <h1 className="text-3xl font-bold mb-2">Projected 8th CPC Pay Matrix</h1>
         <p className="text-muted-foreground max-w-3xl">
           Entry-level basic pay for all 7th CPC levels alongside projected 8th CPC entry pay
           based on the selected fitment factor.
