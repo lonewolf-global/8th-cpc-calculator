@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>8th CPC Fitment Factor Demand Explained: Why Unions Want 3.83</title>
+
+  <meta
+    name="description"
+    content="Know why employee unions are demanding a 3.83 fitment factor under the 8th Pay Commission and how it could impact salary, pension, DA, and arrears."
+  />
+
+  <link rel="canonical" href="https://8cpccalculate.com/blog/8th-cpc-fitment-factor-union-demand.html" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --background: hsl(235 30% 8%);
+      --foreground: hsl(220 15% 96%);
+      --card: hsl(235 25% 13%);
+      --border: hsl(235 20% 22%);
+      --primary: hsl(252 85% 68%);
+      --secondary: hsl(160 62% 50%);
+      --muted: hsl(235 22% 18%);
+      --muted-foreground: hsl(230 10% 70%);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.8;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .bg-orb-violet {
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(124, 58, 237, 0.28), transparent 60%);
+      top: -200px;
+      left: -100px;
+      filter: blur(50px);
+      z-index: -2;
+    }
+
+    .bg-orb-cyan {
+      position: fixed;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(34, 211, 238, 0.18), transparent 60%);
+      bottom: -200px;
+      right: -100px;
+      filter: blur(60px);
+      z-index: -2;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 20px 100px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav a {
+      color: var(--muted-foreground);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .nav a:hover {
+      color: white;
+    }
+
+    .article-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, 0.15);
+      color: #bfa7ff;
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      font-weight: 800;
+    }
+
+    h2 {
+      margin-top: 50px;
+      margin-bottom: 18px;
+      font-size: 1.8rem;
+      color: white;
+    }
+
+    p {
+      color: rgba(255,255,255,0.88);
+      margin-bottom: 20px;
+      font-size: 1.08rem;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .highlight-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 24px;
+      margin: 30px 0;
+    }
+
+    .salary-box {
+      background: linear-gradient(
+        135deg,
+        rgba(124,58,237,0.18),
+        rgba(34,211,238,0.08)
+      );
+
+      border: 1px solid rgba(124,58,237,0.25);
+      border-radius: 18px;
+      padding: 28px;
+      margin: 30px 0;
+    }
+
+    .salary-box strong {
+      color: white;
+    }
+
+    a.inline-link {
+      color: #9b87f5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a.inline-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer-cta {
+      margin-top: 60px;
+      padding: 32px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+
+    .footer-cta a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      background: hsl(252 85% 68%);
+      color: black;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-cta a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(124,58,237,0.4);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .article-card {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-orb-violet"></div>
+  <div class="bg-orb-cyan"></div>
+
+  <div class="container">
+
+    <div class="nav">
+      <a href="/" class="logo">8th CPC Calculator</a>
+      <a href="/">Home</a>
+    </div>
+
+    <article class="article-card">
+
+      <div class="badge">
+        8th CPC • Salary Revision • Fitment Factor
+      </div>
+
+      <h1>
+        What Fitment Factor Are Employee Unions Demanding Under 8th CPC?
+      </h1>
+
+      <p>
+        The biggest discussion around the 8th Central Pay Commission is the expected fitment factor.
+        Central government employees, pensioners, and staff associations are closely watching whether
+        the government accepts the higher demands raised by unions.
+      </p>
+
+      <p>
+        Most employee bodies and federations are demanding a <strong>fitment factor of 3.83</strong>
+        under the 8th CPC. This is significantly higher than the 2.57 factor implemented during the 7th CPC.
+      </p>
+
+      <h2>What Is a Fitment Factor?</h2>
+
+      <p>
+        The fitment factor is the multiplier used to revise existing basic pay into the new pay structure.
+      </p>
+
+      <div class="salary-box">
+        <p><strong>Current Basic Pay:</strong> ₹44,900</p>
+        <p><strong>If fitment factor becomes 3.83:</strong></p>
+        <p><strong>Revised Basic Pay = ₹44,900 × 3.83 = ₹1,71,967</strong></p>
+      </div>
+
+      <p>
+        You can instantly test different fitment scenarios using the
+        <a class="inline-link" href="/">
+          8th CPC Salary Calculator
+        </a>.
+      </p>
+
+      <h2>Why Are Unions Demanding 3.83?</h2>
+
+      <p>
+        Employee unions argue that:
+      </p>
+
+      <div class="highlight-box">
+        <ul>
+          <li>Inflation has sharply increased since 2016</li>
+          <li>Housing, education, healthcare, and transportation costs have risen heavily</li>
+          <li>Government salaries are lagging behind private sector compensation in many technical roles</li>
+          <li>Existing minimum wage calculations are outdated</li>
+          <li>Family consumption patterns have changed significantly</li>
+        </ul>
+      </div>
+
+      <p>
+        Several unions are also referring to the “consumption unit” methodology used in previous wage calculations.
+      </p>
+
+      <h2>Is 3.83 Realistic?</h2>
+
+      <p>
+        A 3.83 fitment factor would create a massive financial burden on the central government.
+        Many analysts believe the final approved factor may fall somewhere between 2.0 and 2.4.
+      </p>
+
+      <p>
+        However, unions generally start negotiations with higher demands to create room for settlement.
+      </p>
+
+      <h2>Impact on Salary and Pension</h2>
+
+      <p>
+        A higher fitment factor directly increases:
+      </p>
+
+      <div class="highlight-box">
+        <ul>
+          <li>Basic pay</li>
+          <li>Pension</li>
+          <li>Dearness Allowance base</li>
+          <li>HRA</li>
+          <li>Transport Allowance</li>
+          <li>Arrears amount</li>
+        </ul>
+      </div>
+
+      <p>
+        You can compare salary projections using the
+        <a class="inline-link" href="/">
+          8th CPC Pay Matrix
+        </a>
+        and estimate delayed payments through the
+        <a class="inline-link" href="/">
+          8th CPC Arrears Calculator
+        </a>.
+      </p>
+
+      <h2>Final Thoughts</h2>
+
+      <p>
+        The final fitment factor under the 8th CPC has not yet been officially decided.
+        But current union demands clearly show that employee organizations are pushing aggressively
+        for a major salary correction after nearly a decade.
+      </p>
+
+      <div class="footer-cta">
+        <h2 style="margin-top:0;">
+          Calculate Your Expected 8th CPC Salary
+        </h2>
+
+        <p>
+          Instantly estimate revised salary, pension, DA impact, and arrears under different fitment factors.
+        </p>
+
+        <a href="/">
+          Open 8th CPC Calculator
+        </a>
+      </div>
+
+    </article>
+
+  </div>
+
+</body>
+</html>
