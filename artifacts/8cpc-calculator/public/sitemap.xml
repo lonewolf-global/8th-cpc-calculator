@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:type" content="article" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%238b5cf6'/><stop offset='100%25' stop-color='%236366f1'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='16' y='22' text-anchor='middle' font-family='system-ui' font-weight='900' font-size='18' fill='white'>8</text></svg>" />
+<meta
+  property="og:title"
+  content="8th CPC Effective Date: When Will Salary Hikes Actually Start?"
+/>
+
+<meta
+  property="og:description"
+  content="Know the expected implementation timeline of the 8th Pay Commission, likely effective date, arrears period, and when revised salaries may start."
+/>
+
+<meta
+  property="og:url"
+  content="https://8cpccalculate.com/insight/8th-cpc-effective-date-salary-hike/"
+/>
+
+<meta
+  property="og:image"
+  content="https://8cpccalculate.com/opengraph.jpg"
+/>
+
+  <title>8th CPC Effective Date: When Will Salary Hikes Actually Start?</title>
+
+  <meta
+    name="description"
+    content="Know the expected implementation timeline of the 8th Pay Commission, likely effective date, arrears period, and when revised salaries may start."
+  />
+
+  <link
+    rel="canonical"
+    href="https://8cpccalculate.com/insight/8th-cpc-effective-date-salary-hike/"
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --background: hsl(235 30% 8%);
+      --foreground: hsl(220 15% 96%);
+      --card: hsl(235 25% 13%);
+      --border: hsl(235 20% 22%);
+      --primary: hsl(252 85% 68%);
+      --secondary: hsl(160 62% 50%);
+      --muted: hsl(235 22% 18%);
+      --muted-foreground: hsl(230 10% 70%);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.8;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .bg-orb-violet {
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(124, 58, 237, 0.28), transparent 60%);
+      top: -200px;
+      left: -100px;
+      filter: blur(50px);
+      z-index: -2;
+    }
+
+    .bg-orb-cyan {
+      position: fixed;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(34, 211, 238, 0.18), transparent 60%);
+      bottom: -200px;
+      right: -100px;
+      filter: blur(60px);
+      z-index: -2;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 20px 100px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav a {
+      color: var(--muted-foreground);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .nav a:hover {
+      color: white;
+    }
+
+    .article-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, 0.15);
+      color: #bfa7ff;
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      font-weight: 800;
+    }
+
+    h2 {
+      margin-top: 50px;
+      margin-bottom: 18px;
+      font-size: 1.8rem;
+      color: white;
+    }
+
+    p {
+      color: rgba(255,255,255,0.88);
+      margin-bottom: 20px;
+      font-size: 1.08rem;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .highlight-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 24px;
+      margin: 30px 0;
+    }
+
+    .salary-box {
+      background: linear-gradient(
+        135deg,
+        rgba(124,58,237,0.18),
+        rgba(34,211,238,0.08)
+      );
+
+      border: 1px solid rgba(124,58,237,0.25);
+      border-radius: 18px;
+      padding: 28px;
+      margin: 30px 0;
+    }
+
+    .salary-box strong {
+      color: white;
+    }
+
+    a.inline-link {
+      color: #9b87f5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a.inline-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer-cta {
+      margin-top: 60px;
+      padding: 32px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+
+    .footer-cta a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      background: hsl(252 85% 68%);
+      color: black;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-cta a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(124,58,237,0.4);
+    }
+
+    .tool-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .tool-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      text-decoration: none;
+      color: white;
+      transition: 0.2s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(124,58,237,0.35);
+      box-shadow: 0 0 20px rgba(124,58,237,0.18);
+    }
+
+    .tool-card span {
+      display: block;
+      margin-top: 6px;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .article-card {
+        padding: 28px;
+      }
+    }
+  </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "8th CPC Effective Date: When Will Salary Hikes Actually Start?",
+  "description": "Know the expected implementation timeline of the 8th Pay Commission, likely effective date, arrears period, and when revised salaries may start.",
+  "author": {
+    "@type": "Organization",
+    "name": "8cpccalculate.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "8cpccalculate.com"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://8cpccalculate.com/insight/8th-cpc-effective-date-salary-hike/"
+  }
+}
+</script>
+</head>
+
+<body>
+
+  <div class="bg-orb-violet"></div>
+  <div class="bg-orb-cyan"></div>
+
+  <div class="container">
+
+    <div class="nav">
+      <a href="https://8cpccalculate.com" class="logo">
+        8th CPC Calculator
+      </a>
+
+      <a href="https://8cpccalculate.com">
+        Home
+      </a>
+    </div>
+
+    <article class="article-card">
+
+      <div class="badge">
+        8th CPC • Effective Date • Salary Hike
+      </div>
+
+      <h1>
+        When Will 8th CPC Salary Hikes Become Effective?
+      </h1>
+
+      <p>
+        One of the most common questions among central government employees is:
+        when will the 8th CPC salary hike actually become effective?
+      </p>
+
+      <p>
+        Although discussions around the 8th Pay Commission have intensified,
+        the actual implementation process takes time.
+      </p>
+
+      <h2>Expected Effective Date</h2>
+
+      <p>
+        Most projections currently assume:
+      </p>
+
+      <div class="highlight-box">
+        <ul>
+          <li>Proposed effective date: 1 January 2026</li>
+          <li>Report submission: Likely during 2027</li>
+          <li>Government approval: Possibly late 2027</li>
+          <li>Salary implementation: 2027 or 2028</li>
+        </ul>
+      </div>
+
+      <p>
+        This means employees may receive arrears for the delayed period.
+      </p>
+
+      <h2>Why Pay Commission Implementation Gets Delayed</h2>
+
+      <p>
+        Every Central Pay Commission takes time because:
+      </p>
+
+      <div class="highlight-box">
+        <ul>
+          <li>Large-scale financial analysis is involved</li>
+          <li>Employee unions submit memorandums</li>
+          <li>Ministries provide expenditure estimates</li>
+          <li>Pension and allowance revisions require separate calculations</li>
+          <li>Cabinet approval is necessary</li>
+        </ul>
+      </div>
+
+      <p>
+        The same pattern was observed during previous CPC cycles.
+      </p>
+
+      <h2>Will Employees Get Arrears?</h2>
+
+      <p>
+        Yes, if implementation happens after January 2026,
+        employees are likely to receive arrears covering the difference
+        between old salary and revised salary.
+      </p>
+
+      <p>
+        You can estimate possible arrears using the
+        <a class="inline-link" href="https://8cpccalculate.com/arrears">
+          8th CPC Arrears Calculator
+        </a>.
+      </p>
+
+      <h2>Example Arrear Scenario</h2>
+
+      <div class="salary-box">
+        <p><strong>Suppose:</strong></p>
+        <ul>
+          <li>Revised salary increase = ₹18,000/month</li>
+          <li>Delay period = 18 months</li>
+        </ul>
+
+        <p>
+          <strong>
+            Estimated arrears:
+            ₹18,000 × 18 = ₹3,24,000
+          </strong>
+        </p>
+
+        <p>
+          This does not include annual increments or allowance changes.
+        </p>
+      </div>
+
+      <h2>What Happens to DA?</h2>
+
+      <p>
+        Once the new CPC is implemented:
+      </p>
+
+      <div class="highlight-box">
+        <ul>
+          <li>Existing DA generally merges into revised basic pay</li>
+          <li>DA resets close to 0%</li>
+          <li>Fresh DA accumulation starts again</li>
+        </ul>
+      </div>
+
+      <h2>Useful Tools for Employees</h2>
+
+      <div class="tool-links">
+
+        <a class="tool-card" href="https://8cpccalculate.com">
+          8th CPC Salary Calculator
+          <span>
+            Estimate revised salary under different fitment factors.
+          </span>
+        </a>
+
+        <a class="tool-card" href="https://8cpccalculate.com/arrears">
+          8th CPC Arrears Calculator
+          <span>
+            Calculate expected delayed payment and arrears.
+          </span>
+        </a>
+
+        <a class="tool-card" href="https://8cpccalculate.com/pay-matrix">
+          8th CPC Pay Matrix
+          <span>
+            Compare revised pay levels and salary bands.
+          </span>
+        </a>
+
+        <a class="tool-card" href="https://8cpccalculate.com/pension">
+          Pension Calculator
+          <span>
+            Estimate pension revision under 8th CPC projections.
+          </span>
+        </a>
+
+        <a class="tool-card" href="https://8cpccalculate.com/about">
+          About 8th CPC
+          <span>
+            Understand fitment factor, DA merger, and implementation process.
+          </span>
+        </a>
+
+      </div>
+
+      <div class="footer-cta">
+
+        <h2 style="margin-top:0;">
+          Estimate Your Revised Salary
+        </h2>
+
+        <p>
+          Explore salary projections, arrears, pension revision,
+          and fitment factor impact instantly.
+        </p>
+
+        <a href="https://8cpccalculate.com">
+          Open 8th CPC Calculator
+        </a>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</body>
+</html>
