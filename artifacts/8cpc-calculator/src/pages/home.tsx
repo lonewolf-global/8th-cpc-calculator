@@ -649,6 +649,121 @@ export default function Home() {
           </>
         )}
       </div>
+      {/* ── SEO CONTENT SECTION ───────────────────────────────────── */}
+<Card className="mt-6 no-print">
+  <CardHeader>
+    <CardTitle className="text-xl">
+      8th Pay Commission Salary Calculator (2026)
+    </CardTitle>
+
+    <CardDescription>
+      Estimate revised salary, pension, arrears, DA merger,
+      HRA revision and fitment factor impact under the expected
+      8th Central Pay Commission.
+    </CardDescription>
+  </CardHeader>
+
+  <CardContent className="space-y-6 text-sm leading-7 text-muted-foreground">
+
+    <section className="space-y-3">
+      <h3 className="text-lg font-semibold text-foreground">
+        What is the 8th Pay Commission?
+      </h3>
+
+      <p>
+        The 8th Central Pay Commission (8th CPC) is expected to revise
+        salary structures for central government employees and pensioners
+        from January 2026 onward.
+      </p>
+
+      <p>
+        Employees are closely watching expected fitment factors,
+        DA merger rules, revised HRA percentages,
+        transport allowance changes, and pension revision formulas.
+      </p>
+    </section>
+
+    <section className="space-y-3">
+      <h3 className="text-lg font-semibold text-foreground">
+        Expected 8th CPC Fitment Factor
+      </h3>
+
+      <p>
+        Current discussions suggest that the 8th CPC fitment factor may range
+        between <strong>1.92× and 2.86×</strong>.
+      </p>
+
+      <p>
+        This calculator allows employees to compare all major fitment scenarios
+        instantly across every pay level.
+      </p>
+    </section>
+
+    <section className="space-y-3">
+      <h3 className="text-lg font-semibold text-foreground">
+        Useful 8th CPC Tools
+      </h3>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+
+        <a
+          href="/arrears"
+          className="rounded-xl border p-4 hover:bg-muted/40 transition"
+        >
+          <div className="font-semibold text-foreground">
+            8th CPC Arrears Calculator
+          </div>
+
+          <p className="text-xs mt-1">
+            Estimate delayed salary arrears after implementation.
+          </p>
+        </a>
+
+        <a
+          href="/pension"
+          className="rounded-xl border p-4 hover:bg-muted/40 transition"
+        >
+          <div className="font-semibold text-foreground">
+            Pension Revision Calculator
+          </div>
+
+          <p className="text-xs mt-1">
+            Estimate revised pension under projected fitment factors.
+          </p>
+        </a>
+
+        <a
+          href="/pay-matrix"
+          className="rounded-xl border p-4 hover:bg-muted/40 transition"
+        >
+          <div className="font-semibold text-foreground">
+            8th CPC Pay Matrix
+          </div>
+
+          <p className="text-xs mt-1">
+            Compare revised pay levels and salary bands.
+          </p>
+        </a>
+
+        <a
+          href="/insights"
+          className="rounded-xl border p-4 hover:bg-muted/40 transition"
+        >
+          <div className="font-semibold text-foreground">
+            Latest 8th CPC Insights
+          </div>
+
+          <p className="text-xs mt-1">
+            Read articles about implementation dates,
+            DA merger, fitment factor and salary hikes.
+          </p>
+        </a>
+
+      </div>
+    </section>
+
+  </CardContent>
+</Card>
     </div>
   );
 }
