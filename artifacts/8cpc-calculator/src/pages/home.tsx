@@ -746,7 +746,7 @@ export default function Home() {
         </a>
 
         <a
-          href="/insights"
+          href="https://8cpccalculate.com/insight/"
           className="rounded-xl border p-4 hover:bg-muted/40 transition"
         >
           <div className="font-semibold text-foreground">
