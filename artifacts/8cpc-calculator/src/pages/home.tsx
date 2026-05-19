@@ -764,8 +764,7 @@ export default function Home() {
 
   </CardContent>
 </Card>
-    </div>
-    {/* SEO Content Block */}
+          {/* SEO Content Block */}
 
 <section className="mt-16 rounded-2xl border border-border/40 bg-card/40 p-6 space-y-5">
 
@@ -789,5 +788,6 @@ export default function Home() {
   </p>
 
 </section>
+    </div>
   );
 }
