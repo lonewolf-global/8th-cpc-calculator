@@ -765,5 +765,29 @@ export default function Home() {
   </CardContent>
 </Card>
     </div>
+    {/* SEO Content Block */}
+
+<section className="mt-16 rounded-2xl border border-border/40 bg-card/40 p-6 space-y-5">
+
+  <h2 className="text-2xl font-bold">
+    8th Pay Commission Salary Calculator (2026)
+  </h2>
+
+  <p className="text-muted-foreground leading-7">
+    This 8th CPC salary calculator helps Central Government employees
+    estimate revised salary, expected fitment factor impact,
+    DA merger effect, HRA revision, transport allowance,
+    pension changes, and projected in-hand salary under the
+    upcoming 8th Pay Commission.
+  </p>
+
+  <p className="text-muted-foreground leading-7">
+    Employees can compare multiple fitment factor scenarios including
+    1.92, 2.08, 2.57, 2.86 and 3.68 to estimate future salary growth.
+    The calculator also provides pension projections,
+    arrears estimation, and pay matrix comparisons.
+  </p>
+
+</section>
   );
 }
